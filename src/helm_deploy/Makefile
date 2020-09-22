@@ -1,7 +1,7 @@
 NAME := helm-deploy
 VERSION := $(shell cat version.txt)
 
-include ../make/Makefile
+#include ../make/Makefile
 
 .PHONY: chart-repo
 
