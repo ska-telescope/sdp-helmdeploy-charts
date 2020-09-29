@@ -14,6 +14,19 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       restartPolicy: {{ .Values.cbf_sdp_emulator.restartPolicy }}
+      initContainers:
+      - name: git-repo-clone
+        image: alpine:latest # Any image with wget will do
+        command: [ 'sh','-c', 'if [ -d /mnt/data ]; then exit 0 ; else mkdir /mnt/data && cd /mnt/data && wget https://gitlab.com/ska-telescope/cbf-sdp-emulator/-/raw/master/data/sim-vis.ms.tar.gz; fi']
+        volumeMounts:
+          - mountPath: /mnt
+            name: input-storage
+      - name: default-input
+        image:  alpine:latest
+        command: ['sh','-c','if [ -d /mnt/input.ms ]; then exit 0 ; else cd /mnt/data/ && tar -xf sim-vis.ms.tar.gz && mv sim-vis.ms /mnt/input.ms ; fi']
+        volumeMounts:
+          - mountPath: /mnt
+            name: input-storage
       containers:
       - image: {{ .Values.cbf_sdp_emulator.container }}:{{ .Values.cbf_sdp_emulator.version }}
         imagePullPolicy: {{ .Values.cbf_sdp_emulator.imagePullPolicy }}
@@ -21,7 +34,7 @@ spec:
         command: ["emu-recv", "-o", "transmission.channels_per_stream=4", "-o", "reception.datamodel=/mnt/input.ms", "-o", "reception.outputfilename=/mnt/output.ms"]
         volumeMounts:
         - mountPath: /mnt
-          name: task-pv-storage
+          name: input-storage
         {{- with .Values.receiver.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
@@ -32,13 +45,17 @@ spec:
         command: ["emu-send", "/mnt/input.ms", "-o", "transmission.channels_per_stream=4", "-o", "transmission.rate=147000"]
         volumeMounts:
         - mountPath: /mnt
-          name: task-pv-storage
+          name: input-storage
         {{- with .Values.sender.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
       volumes:
-      - name: task-pv-storage
-        persistentVolumeClaim:
-            claimName: task-pv-claim
+      - name: input-storage
+        emptyDir: {}
+
   backoffLimit: 1
+
+
+
+
