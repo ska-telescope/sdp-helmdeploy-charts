@@ -43,3 +43,16 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+
+{{/* Environment variables for HTTP proxy settings */}}
+{{- define "cbf_sdp_emulator.http-proxy" -}}
+{{- $noproxy := list  "localhost" "127.0.0.1" "10.96.0.0/12" "172.17.0.1/12" -}}
+{{- if eq $.Values.proxy.use true }}
+- name: http_proxy
+  value: {{ printf "%s%s" "http://" .Values.proxy.server | quote  }}
+- name: https_proxy
+  value: {{ printf "%s%s" "http://" .Values.proxy.server | quote }}
+- name: no_proxy
+  value: {{ join "," $noproxy | quote }}
+{{- end }}
+{{- end -}}

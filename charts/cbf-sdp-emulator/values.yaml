@@ -7,6 +7,10 @@ cbf_sdp_emulator:
   imagePullPolicy: IfNotPresent
   restartPolicy: Never
 
+proxy:
+  use : false
+  server : none
+
 input:
   mountType: hostPath
   mountTypeOptions:
@@ -17,7 +21,17 @@ sender:
   resources: {}
 
 receiver:
+  arguments: {}
   resources: {}
+
+results:
+  push: true
+  path: yan-483-bucket
+
+rclone:
+  anonymous: "false"
+  configurl: https://www.dropbox.com/s/yqmzfs8ovtnonbe/rclone.conf?dl=1
+  command: gcs:/yan-483-bucket/
 
 nameOverride: ""
 fullnameOverride: ""

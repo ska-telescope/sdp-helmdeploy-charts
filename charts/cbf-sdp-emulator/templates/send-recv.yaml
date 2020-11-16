@@ -15,15 +15,38 @@ spec:
     spec:
       restartPolicy: {{ .Values.cbf_sdp_emulator.restartPolicy }}
       initContainers:
-      - name: git-repo-clone
+      - name: set-up-input-dir
         image: alpine:latest # Any image with wget will do
-        command: [ 'sh','-c', 'if [ -d /mnt/data ]; then exit 0 ; else mkdir /mnt/data && cd /mnt/data && wget https://gitlab.com/ska-telescope/cbf-sdp-emulator/-/raw/master/data/sim-vis.ms.tar.gz; fi']
+        command: [ "sh","-c", "if [ -d /mnt/data ]; then exit 0 ; else mkdir /mnt/data ; fi "]
         volumeMounts:
           - mountPath: /mnt
             name: input-storage
+      {{- if eq $.Values.model.pull true }}
+      - name: pull-input-image
+        image: alpine:latest # Any image with wget will do
+        env:
+          - name: MODEL_URL
+            value: "{{ $.Values.model.url }}"
+          - name: MODEL_NAME
+            value: "{{ $.Values.model.name }}"
+          {{- include "cbf_sdp_emulator.http-proxy" . | nindent 10 }}
+        command: [ "sh","-c", "cd /mnt/data && apk add wget && wget $MODEL_URL "]
+        volumeMounts:
+          - mountPath: /mnt
+            name: input-storage
+      {{- end }}
       - name: default-input
         image:  alpine:latest
-        command: ['sh','-c','if [ -d /mnt/input.ms ]; then exit 0 ; else cd /mnt/data/ && tar -xf sim-vis.ms.tar.gz && mv sim-vis.ms /mnt/input.ms ; fi']
+        env:
+          - name: MODEL_URL
+            value: "{{ $.Values.model.url }}"
+          - name: MODEL_NAME
+            value: "{{ $.Values.model.name }}"
+          - name: MODEL_NAME
+            value: "{{ $.Values.model.name }}"
+          - name: MODEL_ARCHIVE
+            value: "{{ $.Values.model.name }}.tar.gz"
+        command: ["sh","-c","if [ -d /mnt/data/$MODEL_NAME ]; then exit 0 ; else cd /mnt/data/ && tar -xf $MODEL_ARCHIVE ; fi"]
         volumeMounts:
           - mountPath: /mnt
             name: input-storage
@@ -31,7 +54,13 @@ spec:
       - image: {{ .Values.cbf_sdp_emulator.container }}:{{ .Values.cbf_sdp_emulator.version }}
         imagePullPolicy: {{ .Values.cbf_sdp_emulator.imagePullPolicy }}
         name: receiver
-        command: ["emu-recv", "-o", "transmission.channels_per_stream=4", "-o", "reception.datamodel=/mnt/input.ms", "-o", "reception.outputfilename=/mnt/output.ms"]
+        command: ['sh','-c','emu-recv {{- range $key,$value := .Values.transmission}} {{ $prefix := "-o  transmission."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
+                  {{- range $key,$value := .Values.reception}} {{ $prefix := " -o reception."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
+                  {{- range $key,$value := .Values.reader}} {{ $prefix := " -o  reader."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
+                  {{- range $key,$value := .Values.payload}} {{ $prefix := " -o  payload."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
+                   -o reception.datamodel=/mnt/data/{{ $.Values.model.name }}
+                  {{- if eq $.Values.results.push true }} && mv {{ $.Values.reception.outputfilename }} /mnt/data/{{- $.Values.reception.outputfilename }}
+                  && touch /mnt/data/done {{- end }} ']
         volumeMounts:
         - mountPath: /mnt
           name: input-storage
@@ -39,10 +68,28 @@ spec:
         resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+      {{- if eq $.Values.results.push true }}
+      - image: rclone/rclone:latest
+        name: rclone-push
+        {{- if eq $.Values.proxy.use true }}
+        env:
+          {{- include "cbf_sdp_emulator.http-proxy" . | nindent 10 }}
+        {{- end }}
+        command: ['sh','-c','rclone copyurl -L {{ $.Values.rclone.configurl }} /mnt/data/rclone.conf ; while [[ ! -f /mnt/data/done ]]; do sleep 10; done;
+                              rclone copy --config=/mnt/data/rclone.conf /mnt/data/{{- $.Values.reception.outputfilename }} {{ $.Values.rclone.command }}' ]
+        volumeMounts:
+        - mountPath: /mnt
+          name: input-storage
+        {{- with .Values.receiver.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- end }}
+      {{- if eq $.Values.transmit.model true }}
       - image: {{ .Values.cbf_sdp_emulator.container }}:{{ .Values.cbf_sdp_emulator.version }}
         imagePullPolicy: {{ .Values.cbf_sdp_emulator.imagePullPolicy }}
         name: sender
-        command: ["emu-send", "/mnt/input.ms", "-o", "transmission.channels_per_stream=4", "-o", "transmission.rate=147000"]
+        command: ["emu-send", "/mnt/data/{{ $.Values.model.name }}", "-o", "transmission.channels_per_stream={{ $.Values.transmission.channels_per_stream }}", "-o", "transmission.rate={{ $.Values.transmission.rate }}"]
         volumeMounts:
         - mountPath: /mnt
           name: input-storage
@@ -50,6 +97,7 @@ spec:
         resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+      {{- end }}
       volumes:
       - name: input-storage
         emptyDir: {}
