@@ -1,0 +1,28 @@
+# Default values for receive
+# Declare variables to be passed into your templates.
+
+
+service:
+  name: receive
+
+receive:
+  name: receive
+  component: ""
+  subsystem: ""
+  completions: 1
+  image: ""
+  imagePullPolicy: IfNotPresent
+  ttl: 3600
+  command: []
+  resources: {}
+
+volume:
+  name: ""
+  path: ""
+
+output:
+  name: ""
+
+nameOverride: ""
+fullnameOverride: ""
+

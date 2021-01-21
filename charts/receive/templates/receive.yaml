@@ -1,0 +1,46 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.service.name }} # DNS hostname
+spec:
+  clusterIP: None
+  selector:
+    component: {{ .Values.receive.component }}
+    subsystem: {{ .Values.receive.subsystem }}
+
+---
+apiVersion: batch/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.receive.name }}
+spec:
+  replicas: {{ .Values.receive.replicas }}
+  activeDeadlineSeconds: {{ .Values.receive.ttl }}
+  completions: {{ .Values.receive.completions }}
+  selector:
+    matchLabels:
+      app: receive
+  template:
+    metadata:
+      labels:
+        app: receive
+    spec:
+      containers:
+      - name: receive
+        image: {{ .Values.receive.image }}
+        imagePullPolicy: {{ .Values.receive.imagePullPolicy }}
+        tty: True
+        command: {{ .Values.receive.command }}
+        volumeMounts:
+          - mountPath: { { .Values.volume.path } }
+            name: { { .Values.volume.name } }
+        { { - with .Values.receive.resources } }
+        resources:
+          { { - toYaml . | nindent 10 } }
+        { { - end } }
+        { { - end } }
+      restartPolicy: Never
+      volumes:
+          - name: output
+            persistentVolumeClaim:
+                claimName: {{ .Values.output.name }}
