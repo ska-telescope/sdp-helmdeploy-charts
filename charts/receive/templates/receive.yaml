@@ -1,46 +1,53 @@
-kind: Service
+---
+# Dummy Service to ensure Pod is DNS addressable
 apiVersion: v1
+kind: Service
 metadata:
-  name: {{ .Values.service.name }} # DNS hostname
+  name: receive
+  namespace: {{ .Release.Namespace }}
+  labels:
+    workflow: {{ .Values.service.workflow }}
 spec:
   clusterIP: None
   selector:
-    component: {{ .Values.receive.component }}
-    subsystem: {{ .Values.receive.subsystem }}
+    workflow: {{ .Values.service.workflow }}
 
 ---
-apiVersion: batch/v1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Values.receive.name }}
+  name: receive
+  namespace: {{ .Release.Namespace }}
+  labels:
+    workflow: {{ .Values.receive.workflow }}
 spec:
   replicas: {{ .Values.receive.replicas }}
-  activeDeadlineSeconds: {{ .Values.receive.ttl }}
-  completions: {{ .Values.receive.completions }}
   selector:
     matchLabels:
-      app: receive
+      workflow: {{ .Values.receive.workflow }}
+  serviceName: receive
   template:
     metadata:
       labels:
-        app: receive
+        workflow: {{ .Values.receive.workflow }}
     spec:
       containers:
       - name: receive
         image: {{ .Values.receive.image }}
         imagePullPolicy: {{ .Values.receive.imagePullPolicy }}
-        tty: True
-        command: {{ .Values.receive.command }}
         volumeMounts:
-          - mountPath: { { .Values.volume.path } }
-            name: { { .Values.volume.name } }
-        { { - with .Values.receive.resources } }
+          - mountPath: {{ .Values.volume.path }}
+            name: {{ .Values.volume.name }}
+        command: {{ .Values.receive.command }}
+        {{- with .Values.receive.resources }}
         resources:
-          { { - toYaml . | nindent 10 } }
-        { { - end } }
-        { { - end } }
-      restartPolicy: Never
-      volumes:
-          - name: output
-            persistentVolumeClaim:
-                claimName: {{ .Values.output.name }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Values.volumeClaim.name }}
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.volumeClaim.storage }}

@@ -3,25 +3,26 @@
 
 
 service:
-  name: receive
+  workflow: cbf-receiver
+
 
 receive:
-  name: receive
-  component: ""
-  subsystem: ""
+  workflow: cbf-receiver
   completions: 1
-  image: ""
+  image: k8s.gcr.io/nginx-slim:0.8
   imagePullPolicy: IfNotPresent
+  replicas: 1
   ttl: 3600
   command: []
   resources: {}
 
 volume:
-  name: ""
-  path: ""
+  name: www
+  path: /usr/share/nginx/html
 
-output:
-  name: ""
+volumeClaim:
+  name: www
+  storage: 1Gi
 
 nameOverride: ""
 fullnameOverride: ""
