@@ -1,18 +1,36 @@
 # Default values for receive
 # Declare variables to be passed into your templates.
 
-
 service:
   workflow: cbf-receiver
 
-
 receive:
-  workflow: cbf-receiver
+  workflow: science-pipeline
   completions: 1
   image: k8s.gcr.io/nginx-slim:0.8
   imagePullPolicy: IfNotPresent
   replicas: 1
   ttl: 3600
+  command: []
+  resources: {}
+
+containers:
+  recvWriter: false
+  msWriter: false
+
+recvWriter:
+  name: recvWriter
+  workflow: science-pipeline
+  image: busybox:1.28.4
+  imagePullPolicy: IfNotPresent
+  command: []
+  resources: {}
+
+msWriter:
+  name: msWriter
+  workflow: science-pipeline
+  image: debian
+  imagePullPolicy: IfNotPresent
   command: []
   resources: {}
 

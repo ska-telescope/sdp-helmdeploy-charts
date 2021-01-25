@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: receive
+  name: receive-service
   namespace: {{ .Release.Namespace }}
   labels:
     workflow: {{ .Values.service.workflow }}
@@ -25,7 +25,7 @@ spec:
   selector:
     matchLabels:
       workflow: {{ .Values.receive.workflow }}
-  serviceName: receive
+  serviceName: receive-service
   template:
     metadata:
       labels:
@@ -43,6 +43,26 @@ spec:
         resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+      {{- if eq $.Values.containers.recvWriter true }}
+      - name: {{ .Values.recvWriter.name }}
+        image: {{ .Values.recvWriter.image }}
+        imagePullPolicy: {{ .Values.recvWriter.imagePullPolicy }}
+        command: {{ .Values.recvWriter.command }}
+        {{- with .Values.recvWriter.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- end }}
+      {{- if eq $.Values.containers.msWriter true }}
+      - name: {{ .Values.msWriter.name }}
+        image: {{ .Values.msWriter.image }}
+        imagePullPolicy: {{ .Values.msWriter.imagePullPolicy }}
+        command: {{ .Values.msWriter.command }}
+        {{- with .Values.msWriter.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+      {{- end }}
   volumeClaimTemplates:
   - metadata:
       name: {{ .Values.volumeClaim.name }}
