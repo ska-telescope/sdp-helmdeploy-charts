@@ -2,14 +2,14 @@
 # Declare variables to be passed into your templates.
 
 service:
-  workflow: cbf-receiver
+  workflow: receive
 
 receive:
-  workflow: science-pipeline
+  workflow: receive
   completions: 1
   image: k8s.gcr.io/nginx-slim:0.8
   imagePullPolicy: IfNotPresent
-  replicas: 1
+  replicas: 3
   ttl: 3600
   command: []
   resources: {}
