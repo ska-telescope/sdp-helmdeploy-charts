@@ -19,55 +19,31 @@ metadata:
   name: {{ include "receive.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    workflow: {{ .Values.receive.workflow }}
+    workflow: {{ .Values.workflow }}
 spec:
-  replicas: {{ .Values.receive.replicas }}
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      workflow: {{ .Values.receive.workflow }}
+      workflow: {{ .Values.workflow }}
   serviceName: receive
   template:
     metadata:
       labels:
-        workflow: {{ .Values.receive.workflow }}
+        workflow: {{ .Values.workflow }}
     spec:
       containers:
       - name: receive
-        image: {{ .Values.receive.image }}
-        imagePullPolicy: {{ .Values.receive.imagePullPolicy }}
+        image: {{ .Values.image }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
         volumeMounts:
-          - mountPath: {{ .Values.volume.path }}
-            name: {{ .Values.volume.name }}
-        command: {{ .Values.receive.command }}
-        {{- with .Values.receive.resources }}
+          {{- toYaml .Values.volumeMounts | nindent 8 }}
+        command: {{ .Values.command }}
+        {{- with .Values.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-      {{- if eq $.Values.containers.recvWriter true }}
-      - name: {{ .Values.recvWriter.name }}
-        image: {{ .Values.recvWriter.image }}
-        imagePullPolicy: {{ .Values.recvWriter.imagePullPolicy }}
-        command: {{ .Values.recvWriter.command }}
-        {{- with .Values.recvWriter.resources }}
-        resources:
-          {{- toYaml . | nindent 10 }}
+        {{- if .Values.extraContainersEnabled }}
+        {{- toYaml .Values.extraContainers | nindent 6 }}
         {{- end }}
-      {{- end }}
-      {{- if eq $.Values.containers.msWriter true }}
-      - name: {{ .Values.msWriter.name }}
-        image: {{ .Values.msWriter.image }}
-        imagePullPolicy: {{ .Values.msWriter.imagePullPolicy }}
-        command: {{ .Values.msWriter.command }}
-        {{- with .Values.msWriter.resources }}
-        resources:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
-      {{- end }}
-  volumeClaimTemplates:
-  - metadata:
-      name: {{ .Values.volumeClaim.name }}
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: {{ .Values.volumeClaim.storage }}
+      volumes:
+        {{- toYaml .Values.volumes | nindent 8 }}
