@@ -6,7 +6,8 @@ service:
 
 workflow: receive
 completions: 1
-image: k8s.gcr.io/nginx-slim:0.8
+image: k8s.gcr.io/nginx-slim
+version: 0.8
 imagePullPolicy: IfNotPresent
 replicas: 1
 ttl: 3600
@@ -24,7 +25,7 @@ extraContainers:
   - name: busy
     image: busybox:1.28.4
     imagePullPolicy: IfNotPresent
-    command: ['sh', '-c', 'sleep 1800']
+    command: ['sh'i, '-c', 'sleep 1800']
     resources: {}
 
 volumeMounts:

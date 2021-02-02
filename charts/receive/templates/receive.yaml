@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: receive
-        image: {{ .Values.image }}
+        image: {{ .Values.image }}:{{ .Values.version }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         volumeMounts:
           {{- toYaml .Values.volumeMounts | nindent 8 }}
