@@ -25,7 +25,7 @@ extraContainers:
   - name: busy
     image: busybox:1.28.4
     imagePullPolicy: IfNotPresent
-    command: ['sh'i, '-c', 'sleep 1800']
+    command: ['sh', '-c', 'sleep 1800']
     resources: {}
 
 volumeMounts:
