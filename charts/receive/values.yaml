@@ -6,15 +6,50 @@ service:
 
 workflow: receive
 completions: 1
-image: k8s.gcr.io/nginx-slim
-version: 0.8
+image: nexus.engageska-portugal.pt/ska-docker/cbf_sdp_emulator
+version: latest
 imagePullPolicy: IfNotPresent
 replicas: 1
 ttl: 3600
-command: []
+command: ['emu-recv', '-o', 'transmission.channels_per_stream=4', '-o', 'reception.datamodel=sim-vis.ms', '-o', 'reception.outputfilename=/tmp/output.ms']
 resources: {}
 
 extraContainersEnabled: false
+initContainersEnabled: false
+
+initContainers:
+  - name: set-up-input-dir
+    image: alpine:latest
+    command: [ "sh","-c", "if [ -d /mnt/data ]; then exit 0 ; else mkdir /mnt/data ; fi " ]
+    volumeMounts:
+      - mountPath: /mnt
+        name: input-storage
+  - name: pull-input-image
+    image: alpine:latest # Any image with wget will do
+    env:
+      - name: MODEL_URL
+        value: "{{ $.Values.model.url }}"
+      - name: MODEL_NAME
+        value: "{{ $.Values.model.name }}"
+    command: [ "sh","-c", "cd /mnt/data && apk add wget && wget $MODEL_URL "]
+    volumeMounts:
+      - mountPath: /mnt
+        name: input-storage
+  - name: default-input
+    image:  alpine:latest
+    env:
+      - name: MODEL_URL
+        value: "{{ $.Values.model.url }}"
+      - name: MODEL_NAME
+        value: "{{ $.Values.model.name }}"
+      - name: MODEL_NAME
+        value: "{{ $.Values.model.name }}"
+      - name: MODEL_ARCHIVE
+        value: "{{ $.Values.model.name }}.tar.gz"
+    command: ["sh","-c","if [ -d /mnt/data/$MODEL_NAME ]; then exit 0 ; else cd /mnt/data/ && tar -xf $MODEL_ARCHIVE ; fi"]
+    volumeMounts:
+      - mountPath: /mnt
+        name: input-storage
 
 extraContainers:
   - name: busybox
@@ -29,11 +64,14 @@ extraContainers:
     resources: {}
 
 volumeMounts:
-  - name: www
-    mountPath: /usr/share/nginx/html
+  - name: input-storage
+    mountPath: "{{ $.Values.model.name }}"
 
 volumes:
-  - name: www
+  - name: input-storage
+    hostPath:
+      path: "{{ $.Values.model.path }}"
+
 
 nameOverride: ""
 fullnameOverride: ""

@@ -31,13 +31,17 @@ spec:
       labels:
         workflow: {{ .Values.workflow }}
     spec:
+      {{- if .Values.initContainersEnabled }}
+      initContainers:
+{{ toYaml .Values.initContainers | nindent 8 }}
+      {{- end }}
       containers:
       - name: receive
         image: {{ .Values.image }}:{{ .Values.version }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         volumeMounts:
           {{- toYaml .Values.volumeMounts | nindent 8 }}
-        command: {{ .Values.command }}
+        command: {{ toJson .Values.command }}
         {{- with .Values.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
@@ -46,4 +50,4 @@ spec:
         {{- toYaml .Values.extraContainers | nindent 6 }}
         {{- end }}
       volumes:
-        {{- toYaml .Values.volumes | nindent 8 }}
+{{ toYaml .Values.volumes | nindent 8 }}
