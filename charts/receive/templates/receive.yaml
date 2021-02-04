@@ -3,8 +3,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: receive
-  namespace: {{ .Release.Namespace }}
+  name: receive-testing
+  namespace: sdp
   labels:
     workflow: {{ .Values.service.workflow }}
 spec:
@@ -17,7 +17,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ include "receive.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  namespace: sdp
   labels:
     workflow: {{ .Values.workflow }}
 spec:
@@ -25,7 +25,7 @@ spec:
   selector:
     matchLabels:
       workflow: {{ .Values.workflow }}
-  serviceName: receive
+  serviceName: receive-testing
   template:
     metadata:
       labels:
