@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "receive.name" . }}-recv
+  name: {{ template "receive.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     workflow: {{ .Values.service.workflow }}
@@ -16,7 +16,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ template "receive.name" . }}-recv
+  name: {{ include "receive.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     workflow: {{ .Values.workflow }}
@@ -25,7 +25,7 @@ spec:
   selector:
     matchLabels:
       workflow: {{ .Values.workflow }}
-  serviceName: {{ template "receive.name" . }}-recv
+  serviceName: {{ template "receive.name" . }}
   template:
     metadata:
       labels:
@@ -36,7 +36,7 @@ spec:
 {{ toYaml .Values.initContainers | nindent 8 }}
       {{- end }}
       containers:
-      - name: receive
+      - name: receiver
         image: {{ .Values.image }}:{{ .Values.version }}
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         volumeMounts:
