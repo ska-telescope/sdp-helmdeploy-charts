@@ -51,13 +51,3 @@ app.kubernetes.io/name: {{ include "receive.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "receive.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create -}}
-    {{ default (include "receive.fullname" .) .Values.serviceAccount.name }}
-{{- else -}}
-    {{ default "default" .Values.serviceAccount.name }}
-{{- end -}}
-{{- end -}}

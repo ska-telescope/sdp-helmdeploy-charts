@@ -29,6 +29,8 @@ spec:
   template:
     metadata:
       labels:
+        app.kubernetes.io/name: {{ include "receive.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
         workflow: {{ .Values.workflow }}
     spec:
       {{- if .Values.initContainersEnabled }}
