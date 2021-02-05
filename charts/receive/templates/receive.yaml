@@ -53,3 +53,4 @@ spec:
         {{- end }}
       volumes:
 {{ toYaml .Values.volumes | nindent 8 }}
+      serviceAccountName: sdp-helm
