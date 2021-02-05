@@ -3,7 +3,7 @@ entries:
   buffer:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2021-02-04T23:59:25.122485Z"
+    created: "2021-02-05T00:03:38.653577Z"
     description: Helm chart to create an SDP buffer reservation using a persistent
       volume claim
     digest: 4d832182c3aba562f0c4c72a317a1a173a29edb540fe32ba852a9a03136faca8
@@ -22,7 +22,7 @@ entries:
   cbf-sdp-emulator:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T23:59:25.12346Z"
+    created: "2021-02-05T00:03:38.654025Z"
     description: A Helm chart to deploy a sender/receiver CBF-SDP emulator example
     digest: 84e2857196be5b94f0dc212c2f90c7a4efbddec7bdde6b0e2801fe604f0c65c3
     home: https://developer.skatelescope.org/projects/cbf-sdp-emulator
@@ -36,7 +36,7 @@ entries:
   cbf-sdp-multicast-example:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T23:59:25.12405Z"
+    created: "2021-02-05T00:03:38.654385Z"
     description: A Helm chart that deploys a sender and multiple receivers and send
       data via UDP multicast
     digest: 252fc0564d4c6c05105c071d6d02c64f967c5371633461f4bc5626a227d15c7b
@@ -51,7 +51,7 @@ entries:
   daliuge:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T23:59:25.124541Z"
+    created: "2021-02-05T00:03:38.654691Z"
     description: A Helm chart to deploy DALiuGE
     digest: 401845a629bef30a46801a625d627cbcb83302fbfe8fc05e76af22c18079ec07
     home: https://developer.skatelescope.org/projects/sdp-prototype/
@@ -65,7 +65,7 @@ entries:
   dask:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2021-02-04T23:59:25.126991Z"
+    created: "2021-02-05T00:03:38.655308Z"
     description: Helm chart to deploy SDP Dask execution engine
     digest: 968e7317d75866907aebcdc9d33b62b0b5f58db787dc2cb677ccf2478ff399e5
     home: https://developer.skatelescope.org/projects/sdp-prototype/
@@ -85,7 +85,7 @@ entries:
   plasma-pipeline:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T23:59:25.127729Z"
+    created: "2021-02-05T00:03:38.655652Z"
     description: A Helm chart to deploy a sender/receiver+plasma-writer/plasma-processor
       CBF-SDP emulator example
     digest: 0b70d3bba8f39f754ded1fe1a3bc287fabfb9e9d4b3c87a50eb951a49d610e0d
@@ -100,7 +100,7 @@ entries:
   pss-receive:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T23:59:25.128298Z"
+    created: "2021-02-05T00:03:38.655999Z"
     description: Helm chart to deploy the SDP Prototype pss receiver execution engine
     digest: 8f9aed56ac2ab4dedbbd9ebb40687a1bfb2edbb9d2aba60e3be27c33161f689c
     home: https://developer.skatelescope.org/projects/sdp-prototype/
@@ -117,9 +117,9 @@ entries:
   receive:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-02-04T23:59:25.129188Z"
+    created: "2021-02-05T00:03:38.656651Z"
     description: A Helm chart for to deploy generic receive
-    digest: c6315cca395171b91919454f50b1bdd324b538b9c68e5ac96bb7e540471c2265
+    digest: 0b9e58ec59a4ed874a6b45f3896ab9336d0c798d8e01248a2a3171245e6b4f67
     home: https://gitlab.com/ska-telescope/sdp/ska-sdp-helmdeploy-charts
     maintainers:
     - email: nijin.thykkathu@stfc.ac.uk
@@ -132,7 +132,7 @@ entries:
   vis-receive:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-02-04T23:59:25.12997Z"
+    created: "2021-02-05T00:03:38.65702Z"
     description: Helm chart to deploy the SDP Prototype visibility receiver execution
       engine
     digest: 9d60fac8ba50e4b05719052d19370e42c27e74a60dec4cbaaf8d5a7fb603c08b
@@ -150,7 +150,7 @@ entries:
   workflow:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2021-02-04T23:59:25.130443Z"
+    created: "2021-02-05T00:03:38.657321Z"
     description: Helm chart to deploy an SDP workflow
     digest: e6bbcb38a97ef32bd5a9fea3e019f806abc64c42c30723b1b677c1419884ff83
     home: https://developer.skatelescope.org/projects/sdp-prototype/
@@ -165,4 +165,4 @@ entries:
     urls:
     - workflow-0.1.0.tgz
     version: 0.1.0
-generated: "2021-02-04T23:59:25.121424Z"
+generated: "2021-02-05T00:03:38.653051Z"
