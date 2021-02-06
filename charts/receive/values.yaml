@@ -11,8 +11,7 @@ version: latest
 imagePullPolicy: IfNotPresent
 replicas: 1
 ttl: 3600
-command: ['emu-recv', '-o', 'transmission.channels_per_stream=4', '-o',
-          'reception.datamodel=sim-vis.ms', '-o', 'reception.outputfilename=/tmp/output.ms']
+command: []
 resources: {}
 
 extraContainersEnabled: false
@@ -66,12 +65,12 @@ extraContainers:
 
 volumeMounts:
   - name: input-storage
-    mountPath: sim-vis.ms
+    mountPath: "{{ $.Values.volume.name }}"
 
 volumes:
-  - name: input-storage
+  - name: "{{ $.Values.volume.name }}"
     hostPath:
-      path: /Users/pvw24040/SDP-SKA-SIM/cbf_backup/sim-vis.ms
+      path: "{{ $.Values.volume.path }}"
 
 
 nameOverride: ""
