@@ -65,12 +65,12 @@ extraContainers:
 
 volumeMounts:
   - name: input-storage
-    mountPath: "{{ $.Values.volume.name }}"
+    mountPath: {}
 
 volumes:
-  - name: "{{ $.Values.volume.name }}"
+  - name: input-storage
     hostPath:
-      path: "{{ $.Values.volume.path }}"
+      path: {}
 
 
 nameOverride: ""
