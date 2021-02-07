@@ -66,12 +66,12 @@ extraContainers:
 
 volumeMounts:
   - name: input-storage
-    mountPath: input.ms
+    mountPath: {{ .Values.volumeMounts.mountPath }}
 
 volumes:
   - name: input-storage
     hostPath:
-      path: /tmp/input.ms
+      path: {{ .Values.volumes.hostPath }}
 
 proxy:
   use : false
