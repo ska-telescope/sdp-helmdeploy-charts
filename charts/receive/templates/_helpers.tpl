@@ -51,3 +51,15 @@ app.kubernetes.io/name: {{ include "receive.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
+{{/* Environment variables for HTTP proxy settings */}}
+{{- define "receive.http-proxy" -}}
+{{- $noproxy := list  "localhost" "127.0.0.1" "10.96.0.0/12" "172.17.0.1/12" -}}
+{{- if eq $.Values.proxy.use true }}
+- name: http_proxy
+  value: {{ printf "%s%s" "http://" .Values.proxy.server | quote  }}
+- name: https_proxy
+  value: {{ printf "%s%s" "http://" .Values.proxy.server | quote }}
+- name: no_proxy
+  value: {{ join "," $noproxy | quote }}
+{{- end }}
+{{- end -}}

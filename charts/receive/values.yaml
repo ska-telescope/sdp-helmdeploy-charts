@@ -6,72 +6,26 @@ service:
 
 workflow: receive
 completions: 1
-image: nexus.engageska-portugal.pt/ska-docker/cbf_sdp_emulator
-version: latest
+image: "{{ .Values.image}}"
+version: "{{ .Values.version}}"
 imagePullPolicy: IfNotPresent
 replicas: 1
 ttl: 3600
-command: ['emu-recv', '-o', 'transmission.channels_per_stream=4', '-o',
-          'reception.datamodel=sim-vis.ms', '-o', 'reception.outputfilename=/tmp/output.ms']
 resources: {}
 
-extraContainersEnabled: false
 initContainersEnabled: false
+extraContainersEnabled: false
+extraVolumesEnabled: false
+extraVolumeMountsEnabled: false
 
-initContainers:
-  - name: set-up-input-dir
-    image: alpine:latest
-    command: [ "sh","-c", "if [ -d /mnt/data ]; then exit 0 ; else mkdir /mnt/data ; fi " ]
-    volumeMounts:
-      - mountPath: /mnt
-        name: input-storage
-  - name: pull-input-image
-    image: alpine:latest # Any image with wget will do
-    env:
-      - name: MODEL_URL
-        value: "{{ $.Values.model.url }}"
-      - name: MODEL_NAME
-        value: "{{ $.Values.model.name }}"
-    command: [ "sh","-c", "cd /mnt/data && apk add wget && wget $MODEL_URL "]
-    volumeMounts:
-      - mountPath: /mnt
-        name: input-storage
-  - name: default-input
-    image:  alpine:latest
-    env:
-      - name: MODEL_URL
-        value: "{{ $.Values.model.url }}"
-      - name: MODEL_NAME
-        value: "{{ $.Values.model.name }}"
-      - name: MODEL_NAME
-        value: "{{ $.Values.model.name }}"
-      - name: MODEL_ARCHIVE
-        value: "{{ $.Values.model.name }}.tar.gz"
-    command: ["sh","-c","if [ -d /mnt/data/$MODEL_NAME ]; then exit 0 ; else cd /mnt/data/ && tar -xf $MODEL_ARCHIVE ; fi"]
-    volumeMounts:
-      - mountPath: /mnt
-        name: input-storage
+initContainers: []
+extraContainers: []
+extraVolumes: []
+extraVolumeMounts: []
 
-extraContainers:
-  - name: busybox
-    image: busybox:1.28.4
-    imagePullPolicy: IfNotPresent
-    command: ['sh', '-c', 'sleep 3600']
-    resources: {}
-  - name: busy
-    image: busybox:1.28.4
-    imagePullPolicy: IfNotPresent
-    command: ['sh', '-c', 'sleep 1800']
-    resources: {}
-
-volumeMounts:
-  - name: input-storage
-    mountPath: {{ .Values.volumeMounts.mountPath }}
-
-volumes:
-  - name: input-storage
-    hostPath:
-      path: {{ .Values.volumes.hostPath }}
+results:
+  push: true
+  path: yan-483-bucket
 
 proxy:
   use : false
@@ -79,8 +33,3 @@ proxy:
 
 nameOverride: ""
 fullnameOverride: ""
-
-
-
-
-
