@@ -1,16 +1,11 @@
 # Default values for receive
 # Declare variables to be passed into your templates.
 
-service:
-  workflow: receive
-
 workflow: receive
-completions: 1
-image: "{{ .Values.image}}"
-version: "{{ .Values.version}}"
+image: ""
+version: ""
 imagePullPolicy: IfNotPresent
 replicas: 1
-ttl: 3600
 resources: {}
 
 initContainersEnabled: false
@@ -22,14 +17,6 @@ initContainers: []
 extraContainers: []
 extraVolumes: []
 extraVolumeMounts: []
-
-results:
-  push: true
-  path: yan-483-bucket
-
-proxy:
-  use : false
-  server : none
 
 nameOverride: ""
 fullnameOverride: ""

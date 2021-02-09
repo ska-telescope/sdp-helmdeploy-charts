@@ -6,11 +6,11 @@ metadata:
   name: receive
   namespace: {{ .Release.Namespace }}
   labels:
-    workflow: {{ .Values.service.workflow }}
+    workflow: {{ .Values.workflow }}
 spec:
   clusterIP: None
   selector:
-    workflow: {{ .Values.service.workflow }}
+    workflow: {{ .Values.workflow }}
 
 ---
 apiVersion: apps/v1
@@ -43,7 +43,7 @@ spec:
         imagePullPolicy: {{ .Values.imagePullPolicy }}
         volumeMounts:
           - name: "{{ $.Values.pvc.name }}"
-            mountPath: /mnt/data
+            mountPath: "{{ $.Values.pvc.path }}"
             {{- if .Values.extraVolumeMountsEnabled }}
             {{- toYaml .Values.extraVolumeMounts | nindent 6 }}
             {{- end }}
