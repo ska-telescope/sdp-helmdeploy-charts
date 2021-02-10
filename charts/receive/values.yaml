@@ -2,7 +2,6 @@
 # Declare variables to be passed into your templates.
 
 workflow: receive
-name: ""
 image: ""
 version: ""
 imagePullPolicy: IfNotPresent
