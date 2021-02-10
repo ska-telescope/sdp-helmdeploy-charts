@@ -16,7 +16,7 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "receive.fullname" . }}
+  name: {{ .Values.name | default (include "receive.fullname" .) | quote }}
   namespace: {{ .Release.Namespace }}
   labels:
     workflow: {{ .Values.workflow }}
