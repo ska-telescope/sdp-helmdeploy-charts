@@ -1,0 +1,71 @@
+---
+# Dummy Service to ensure Pod is DNS addressable
+apiVersion: v1
+kind: Service
+metadata:
+  name: receive
+  namespace: {{ .Release.Namespace }}
+  labels:
+    workflow: {{ .Values.workflow }}
+spec:
+  clusterIP: None
+  selector:
+    workflow: {{ .Values.workflow }}
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.name | default (include "receive.fullname" .) | quote }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    workflow: {{ .Values.workflow }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      workflow: {{ .Values.workflow }}
+  serviceName: receive
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "receive.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        workflow: {{ .Values.workflow }}
+    spec:
+      {{- if .Values.initContainersEnabled }}
+      initContainers:
+{{ toYaml .Values.initContainers | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: receiver
+        image: {{ .Values.image }}:{{ .Values.version }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        volumeMounts:
+          - name: "{{ $.Values.pvc.name }}"
+            mountPath: "{{ $.Values.pvc.path }}"
+            {{- if .Values.extraVolumeMountsEnabled }}
+            {{- toYaml .Values.extraVolumeMounts | nindent 6 }}
+            {{- end }}
+        command: [ 'sh','-c','{{ $.Values.recv_emu }} {{- range $key,$value := .Values.transmission}} {{ $prefix := "-o  transmission."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
+                   {{- range $key,$value := .Values.reception}} {{ $prefix := " -o reception."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
+                   {{- range $key,$value := .Values.reader}} {{ $prefix := " -o  reader."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
+                   {{- range $key,$value := .Values.payload}} {{ $prefix := " -o  payload."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
+                   -o reception.datamodel=/mnt/data/{{ $.Values.model.name }}
+                   {{- if eq $.Values.results.push true }} && mv {{ $.Values.reception.outputfilename }} /mnt/data/{{- $.Values.reception.outputfilename }}
+                   && touch /mnt/data/done {{- end }} ']
+        {{- with .Values.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- if .Values.extraContainersEnabled }}
+        {{- toYaml .Values.extraContainers | nindent 6 }}
+        {{- end }}
+      volumes:
+        - name: "{{ $.Values.pvc.name }}"
+          persistentVolumeClaim:
+            claimName: "{{ $.Values.pvc.name }}"
+          {{- if .Values.extraVolumesEnabled }}
+          {{- toYaml .Values.extraVolumes | nindent 6 }}
+          {{- end }}
+
