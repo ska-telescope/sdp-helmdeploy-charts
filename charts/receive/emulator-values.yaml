@@ -1,0 +1,23 @@
+# Default values for receive
+# Declare variables to be passed into your templates.
+
+workflow: receive
+name: ""
+image: ""
+version: ""
+imagePullPolicy: IfNotPresent
+replicas: 1
+resources: {}
+
+initContainersEnabled: false
+extraContainersEnabled: false
+extraVolumesEnabled: false
+extraVolumeMountsEnabled: false
+
+initContainers: []
+extraContainers: []
+extraVolumes: []
+extraVolumeMounts: []
+
+nameOverride: ""
+fullnameOverride: ""
