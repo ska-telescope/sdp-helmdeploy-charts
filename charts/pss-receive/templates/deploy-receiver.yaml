@@ -27,7 +27,7 @@ spec:
           - name: output
             persistentVolumeClaim:
                 claimName: receive-volume-claim-test
----           
+---
 kind: Service
 apiVersion: v1
 metadata:
