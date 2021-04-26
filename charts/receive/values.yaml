@@ -3,11 +3,16 @@
 
 workflow: receive
 name: ""
-image: ""
-version: ""
 imagePullPolicy: IfNotPresent
 replicas: 1
 resources: {}
+command: [ 'sh','-c','{{ $.Values.recv_emu }} {{- range $key,$value := .Values.transmission}} {{ $prefix := "-o  transmission."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
+           {{- range $key,$value := .Values.reception}} {{ $prefix := " -o reception."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
+           {{- range $key,$value := .Values.reader}} {{ $prefix := " -o  reader."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
+           {{- range $key,$value := .Values.payload}} {{ $prefix := " -o  payload."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
+           -o reception.datamodel=/mnt/data/{{ $.Values.model.name }}
+           {{- if eq $.Values.results.push true }} && mv {{ $.Values.reception.outputfilename }} /mnt/data/{{- $.Values.reception.outputfilename }}
+           && touch /mnt/data/done {{- end }} ']
 
 initContainersEnabled: false
 extraContainersEnabled: false

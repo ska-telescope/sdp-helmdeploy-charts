@@ -3,7 +3,7 @@ entries:
   buffer:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2021-04-26T19:35:17.829815+01:00"
+    created: "2021-04-27T00:31:22.130783+01:00"
     description: Helm chart to create an SDP buffer reservation using a persistent
       volume claim
     digest: 1ec99a17abdc89d93907cfa737c86de3d79a090563e5723eac8b46fc79aa39a3
@@ -22,7 +22,7 @@ entries:
   cbf-sdp-emulator:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-04-26T19:35:17.835787+01:00"
+    created: "2021-04-27T00:31:22.13165+01:00"
     description: A Helm chart to deploy a sender/receiver CBF-SDP emulator example
     digest: 69904607548083c37cfc6225e4bffd559efcc40cc6ad140694aaf8961f7dd430
     home: https://developer.skatelescope.org/projects/cbf-sdp-emulator
@@ -36,7 +36,7 @@ entries:
   cbf-sdp-multicast-example:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-04-26T19:35:17.837398+01:00"
+    created: "2021-04-27T00:31:22.13282+01:00"
     description: A Helm chart that deploys a sender and multiple receivers and send
       data via UDP multicast
     digest: 5ee58b3ed5954eb14b983edfc01c0bef1c963cdc54a022a62f0aad3bdbe002e8
@@ -51,7 +51,7 @@ entries:
   daliuge:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-04-26T19:35:17.859245+01:00"
+    created: "2021-04-27T00:31:22.133274+01:00"
     description: A Helm chart to deploy DALiuGE
     digest: ab67afa8c7afde42428cea93904f0d60fb1e7b891419ca9f469de8ee896bf561
     home: https://developer.skatelescope.org/projects/sdp-prototype/
@@ -65,7 +65,7 @@ entries:
   dask:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2021-04-26T19:35:17.860997+01:00"
+    created: "2021-04-27T00:31:22.134256+01:00"
     description: Helm chart to deploy SDP Dask execution engine
     digest: a9a15eed848e80547196f52dacafd3f8249101782fa065475ed6f6d108516550
     home: https://developer.skatelescope.org/projects/sdp-prototype/
@@ -85,7 +85,7 @@ entries:
   plasma-pipeline:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-04-26T19:35:17.862138+01:00"
+    created: "2021-04-27T00:31:22.134837+01:00"
     description: A Helm chart to deploy a sender/receiver+plasma-writer/plasma-processor
       CBF-SDP emulator example
     digest: ece59b02b9ea9205bb83a5d5cb69d09ea8c7850c44deed1dc4b5f1ac9b53d173
@@ -100,7 +100,7 @@ entries:
   pss-receive:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-04-26T19:35:17.863343+01:00"
+    created: "2021-04-27T00:31:22.135497+01:00"
     description: Helm chart to deploy the SDP Prototype pss receiver execution engine
     digest: 4d51a0d3d1b14127ba1654cd5e6bfd8f48e79ed0151907652ec1ad339a76f189
     home: https://developer.skatelescope.org/projects/sdp-prototype/
@@ -117,9 +117,9 @@ entries:
   receive:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2021-04-26T19:35:17.863769+01:00"
+    created: "2021-04-27T00:31:22.136111+01:00"
     description: A Helm chart to deploy receive processes
-    digest: 344a3b1de0818446258e696ce0e441e99ad1f62bf037eec9162c1cfaae9ebafb
+    digest: 656d58a9fc326826ef021afd462bf7262d0e80d37d36df21d75df30b88e7e5a8
     home: https://gitlab.com/ska-telescope/sdp/ska-sdp-helmdeploy-charts
     maintainers:
     - email: nijin.thykkathu@stfc.ac.uk
@@ -132,7 +132,7 @@ entries:
   vis-receive:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-04-26T19:35:17.864899+01:00"
+    created: "2021-04-27T00:31:22.136665+01:00"
     description: Helm chart to deploy the SDP Prototype visibility receiver execution
       engine
     digest: 986209e11c40f002adaa0405f97f08a1fba80a378a61049740cea3fd21a6366e
@@ -150,7 +150,7 @@ entries:
   workflow:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2021-04-26T19:35:17.865978+01:00"
+    created: "2021-04-27T00:31:22.137162+01:00"
     description: Helm chart to deploy an SDP workflow
     digest: 0d91ba05ce45c535bd0c875a135ea4343dc191b022f1c65eaa3f69a41dad5c49
     home: https://developer.skatelescope.org/projects/sdp-prototype/
@@ -165,4 +165,4 @@ entries:
     urls:
     - workflow-0.1.0.tgz
     version: 0.1.0
-generated: "2021-04-26T19:35:17.822084+01:00"
+generated: "2021-04-27T00:31:22.129945+01:00"
