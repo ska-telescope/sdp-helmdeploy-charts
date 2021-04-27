@@ -3,38 +3,63 @@
 
 workflow: receive
 name: ""
-image: ""
-version: ""
 imagePullPolicy: IfNotPresent
 replicas: 1
 resources: {}
 
-commandEnabled: true
-command: [
-    "{{ .Values.recv_emu }}",
-    "-o",
-    "transmission.channels_per_stream={{ .Values.transmission.channels_per_stream}}",
-    "-o",
-    "transmission.rate={{ .Values.transmission.rate}}",
-    "-o",
-    "reception.num_ports={{ .Values.reception.num_ports }}",
-    "-o",
-    "reception.receiver_port_start={{ .Values.reception.receiver_port_start }}",
-    "-o",
-    "reception.datamodel=/mnt/data/{{ .Values.model.name }}",
-    "-o",
-    "reception.outputfilename=/mnt/data/{{ .Values.reception.outputfilename }}",
-    "-o",
-    "payload.method={{ .Values.payload.method }}",
-    "-o",
-    "reader.num_chan={{ .Values.reader.num_chan }}",
-    "-o",
-    "reader.num_repeats={{ .Values.reader.num_repeats }}",
-    "-o",
-    "reader.num_timestamps={{ .Values.reader.num_timestamps }}",
-    "-o",
-    "reader.start_chan={{ .Values.reader.start_chan }}"
-]
+
+duration: 20
+image: nexus.engageska-portugal.pt/ska-docker/cbf_sdp_emulator
+length: 10
+model:
+  name: sim-vis.ms
+payload:
+  method: icd
+pvc:
+  name: local-pvc
+  path: /mnt/data
+reader:
+  num_chan: 0
+  num_repeats: 1
+  num_timestamps: 0
+  start_chan: 0
+reception:
+  num_ports: 1
+  outputfilename: output.ms
+  receiver_port_start: ''
+recv_emu: emu-recv
+results:
+  push: false
+transmission:
+  channels_per_stream: 4
+  rate: '147500'
+version: latest
+
+command: ["emu-recv", "-o", "transmission.channels_per_stream=4", "-o", "reception.datamodel=/mnt/data/sim-vis.ms", "-o", "reception.outputfilename=/tmp/output.ms"]
+#command: [
+#    "emu-recv",
+#    "-o",
+#    "transmission.channels_per_stream=4",
+#    "-o",
+#    "transmission.rate=41000",
+#    "-o",
+#    "reception.num_ports=1",
+#    "-o",
+#    "reception.receiver_port_start=41000",
+#    "-o",
+#    "reception.datamodel=/mnt/data/sim-vis.ms",
+#    "-o",
+#    "-o",
+#    "payload.method=icd",
+#    "-o",
+#    "reader.num_chan=0",
+#    "-o",
+#    "reader.num_repeats=1",
+#    "-o",
+#    "reader.num_timestamps=0",
+#    "-o",
+#    "reader.start_chan=0"
+#]
 
 initContainersEnabled: false
 extraContainersEnabled: false
