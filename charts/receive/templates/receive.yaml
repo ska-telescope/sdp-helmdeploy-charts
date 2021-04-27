@@ -47,21 +47,10 @@ spec:
             {{- if .Values.extraVolumeMountsEnabled }}
             {{- toYaml .Values.extraVolumeMounts | nindent 6 }}
             {{- end }}
-        {{- if .Values.commandEnabled }}
-        command: [
-        {{- range .Values.command }}
-        {{ . }}
-        {{ end }}
-        ]
+        {{- with .Values.command }}
+        command:
+          {{- toYaml . | nindent 10 }}
         {{- end }}
-
-#        command: [ 'sh','-c','{{ $.Values.recv_emu }} {{- range $key,$value := .Values.transmission}} {{ $prefix := "-o  transmission."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
-#                   {{- range $key,$value := .Values.reception}} {{ $prefix := " -o reception."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
-#                   {{- range $key,$value := .Values.reader}} {{ $prefix := " -o  reader."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
-#                   {{- range $key,$value := .Values.payload}} {{ $prefix := " -o  payload."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
-#                   -o reception.datamodel=/mnt/data/{{ $.Values.model.name }}
-#                   {{- if eq $.Values.results.push true }} && mv {{ $.Values.reception.outputfilename }} /mnt/data/{{- $.Values.reception.outputfilename }}
-#                   && touch /mnt/data/done {{- end }} ']
         {{- with .Values.resources }}
         resources:
           {{- toYaml . | nindent 10 }}
