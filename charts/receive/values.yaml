@@ -3,16 +3,38 @@
 
 workflow: receive
 name: ""
+image: ""
+version: ""
 imagePullPolicy: IfNotPresent
 replicas: 1
 resources: {}
-command: [ 'sh','-c','{{ $.Values.recv_emu }} {{- range $key,$value := .Values.transmission}} {{ $prefix := "-o  transmission."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
-           {{- range $key,$value := .Values.reception}} {{ $prefix := " -o reception."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
-           {{- range $key,$value := .Values.reader}} {{ $prefix := " -o  reader."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
-           {{- range $key,$value := .Values.payload}} {{ $prefix := " -o  payload."}} {{ $prefix }} {{- $key }}={{- $value }} {{- end}}
-           -o reception.datamodel=/mnt/data/{{ $.Values.model.name }}
-           {{- if eq $.Values.results.push true }} && mv {{ $.Values.reception.outputfilename }} /mnt/data/{{- $.Values.reception.outputfilename }}
-           && touch /mnt/data/done {{- end }} ']
+
+commandEnabled: true
+command: [
+    "{{ .Values.recv_emu }}",
+    "-o",
+    "transmission.channels_per_stream={{ .Values.transmission.channels_per_stream}}",
+    "-o",
+    "transmission.rate={{ .Values.transmission.rate}}",
+    "-o",
+    "reception.num_ports={{ .Values.reception.num_ports }}",
+    "-o",
+    "reception.receiver_port_start={{ .Values.reception.receiver_port_start }}",
+    "-o",
+    "reception.datamodel=/mnt/data/{{ .Values.model.name }}",
+    "-o",
+    "reception.outputfilename=/mnt/data/{{ .Values.reception.outputfilename }}",
+    "-o",
+    "payload.method={{ .Values.payload.method }}",
+    "-o",
+    "reader.num_chan={{ .Values.reader.num_chan }}",
+    "-o",
+    "reader.num_repeats={{ .Values.reader.num_repeats }}",
+    "-o",
+    "reader.num_timestamps={{ .Values.reader.num_timestamps }}",
+    "-o",
+    "reader.start_chan={{ .Values.reader.start_chan }}"
+]
 
 initContainersEnabled: false
 extraContainersEnabled: false
