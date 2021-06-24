@@ -1,6 +1,6 @@
 receiver:
         completions: 1
-        image: nexus.engageska-portugal.pt/ska-telescope/pss-docker-centos-dev:0.0.1
+        image: nexus.engageska-portugal.pt/ska-telescope/pss-docker-centos-dev:1.0.0
         imagePullPolicy: IfNotPresent
         containerPort: 9021
         protocol: UDP
