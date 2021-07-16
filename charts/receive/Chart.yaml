@@ -2,7 +2,7 @@ apiVersion: v2
 name: receive
 description: A Helm chart to deploy receive processes
 type: application
-version: 0.2.0
+version: 0.1.0
 appVersion: 1.16.0
 home: https://gitlab.com/ska-telescope/sdp/ska-sdp-helmdeploy-charts
 maintainers:
